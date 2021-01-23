@@ -4,7 +4,7 @@ const { TransactionModel } = require('../data-models/Transaction')
 
 const MONGO_URI = 'mongodb://localhost:27017/graphql'
 const generateArg = process.argv.slice(2)[0]
-let txCount = generateArg ? Number(generateArg.split('=')[1]) : 50
+let txCount = generateArg ? Number(generateArg.split('=')[1]) : 51
 
 mongoose.connect(process.env.MONGODB_URL || MONGO_URI, {
   useNewUrlParser: true,
