@@ -10,7 +10,8 @@
     "boot": "yarn --ignore-engines",
     "reset": "rm -rf node_modules 2> /dev/null && yarn boot",
     "start": "./bin/app",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "seed": "node seed-database"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
@@ -18,6 +19,7 @@
     "ejs": "2.6.1",
     "express": "^4.17.1",
     "express-graphql": "0.8.0",
+    "faker": "^5.1.0",
     "graphql": "^14.3.1",
     "http-errors": "^1.7.2",
     "mongoose": "^5.7.5",
