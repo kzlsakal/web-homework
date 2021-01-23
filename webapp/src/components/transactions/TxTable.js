@@ -124,4 +124,11 @@ const styles = css`
     transition: transform 500ms ease-in;
     transform: scale(1);
   }
+  .transaction-exit {
+    transform: scale(1);
+  }
+  .transaction-exit-active {
+    transition: transform 500ms ease-out;
+    transform: scale(0);
+  }
 `
