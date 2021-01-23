@@ -10,6 +10,35 @@ export function Stats ({ data }) {
   return (
     <section css={styles}>
       <div>
+        <h1>Expense Counts and Amounts Per User</h1>
+        <VictoryChart
+          containerComponent={(
+            <VictoryZoomContainer
+              zoomDomain={{
+                x: [0, userExpenseData.maxExpense + userExpenseData.maxExpense / 10],
+                y: [0, userExpenseData.maxCount + userExpenseData.maxCount / 10]
+              }}
+            />
+          )}
+        >
+          <VictoryScatter
+            data={userExpenseData}
+            domain={{
+              x: [0, userExpenseData.maxExpense + userExpenseData.maxExpense / 10],
+              y: [0, userExpenseData.maxCount + userExpenseData.maxCount / 10]
+            }}
+            labelComponent={<VictoryTooltip centerOffset={{ x: 25 }} dy={0} flyoutPadding={10} />}
+            labels={createUserExpenseDataLabel}
+            style={{
+              data: {
+                opacity: ({ datum }) => datum.y % 2 ? 0.7 : 0.4,
+                fill: ({ datum }) => datum.y % 2 ? 'tomato' : 'black'
+              }
+            }}
+          />
+        </VictoryChart>
+      </div>
+      <div>
         <h1>Credit : Debit Ratio</h1>
         <VictoryPie
           colorScale={['tomato', 'orange']}
@@ -61,35 +90,6 @@ export function Stats ({ data }) {
           labelRadius={26}
         />
       </div>
-      <div>
-        <h1>Expense Counts and Amounts Per User</h1>
-        <VictoryChart
-          containerComponent={(
-            <VictoryZoomContainer
-              zoomDomain={{
-                x: [0, userExpenseData.maxExpense + userExpenseData.maxExpense / 10],
-                y: [0, userExpenseData.maxCount + userExpenseData.maxCount / 10]
-              }}
-            />
-          )}
-        >
-          <VictoryScatter
-            data={userExpenseData}
-            domain={{
-              x: [0, userExpenseData.maxExpense + userExpenseData.maxExpense / 10],
-              y: [0, userExpenseData.maxCount + userExpenseData.maxCount / 10]
-            }}
-            labelComponent={<VictoryTooltip centerOffset={{ x: 25 }} dy={0} flyoutPadding={10} />}
-            labels={createUserExpenseDataLabel}
-            style={{
-              data: {
-                opacity: ({ datum }) => datum.y % 2 ? 0.7 : 0.4,
-                fill: ({ datum }) => datum.y % 2 ? 'tomato' : 'black'
-              }
-            }}
-          />
-        </VictoryChart>
-      </div>
     </section>
   )
 }
@@ -107,7 +107,7 @@ Stats.propTypes = {
 }
 
 const styles = css`
-  background-color: gainsboro;
+  background-color: whitesmoke;
   border-radius: 5rem;
   margin-bottom: 10rem;
   text-align: center;
