@@ -22,6 +22,25 @@ const mutation = new GraphQLObjectType({
           .save()
           .then(obj => packageModel(obj)[0])
       }
+    },
+    updateTransaction: {
+      type: TransactionType,
+      args: {
+        id: { type: GraphQLString },
+        user_id: { type: GraphQLString },
+        description: { type: GraphQLString },
+        merchant_id: { type: GraphQLString },
+        debit: { type: GraphQLBoolean },
+        credit: { type: GraphQLBoolean },
+        amount: { type: GraphQLFloat }
+      },
+      resolve (parentValue, args) {
+        return (TransactionModel
+          .findOneAndUpdate({ _id: args.id }, args)
+          .exec()
+          .then(obj => Object.assign(packageModel(obj)[0], args))
+        )
+      }
     }
   }
 })
