@@ -1,6 +1,7 @@
 import { css } from '@emotion/core'
 import { arrayOf, bool, number, shape, string } from 'prop-types'
 import React from 'react'
+import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
 const makeDataTestId = (transactionId, fieldName) => (
   `transaction-${transactionId}-${fieldName}`
@@ -21,7 +22,7 @@ export function TxTable ({ data }) {
             <th>Amount</th>
           </tr>
         </thead>
-        <tbody>
+        <TransitionGroup component='tbody'>
           {
             data.map(({
               id,
@@ -32,20 +33,22 @@ export function TxTable ({ data }) {
               credit,
               amount
             }) => (
-              <tr data-testid={`transaction-${id}`} key={`transaction-${id}`}>
-                <td data-testid={makeDataTestId(id, 'id')}>{id}</td>
-                <td data-testid={makeDataTestId(id, 'userId')}>{userId}</td>
-                <td data-testid={makeDataTestId(id, 'description')}>{description}</td>
-                <td data-testid={makeDataTestId(id, 'merchant')}>{merchantId}</td>
-                <td data-testid={makeDataTestId(id, 'debit')}> {debit ? <div className='tx-type-indicator'>&nbsp;</div> : ''}</td>
-                <td data-testid={makeDataTestId(id, 'credit')}>{credit ? <div className='tx-type-indicator'>&nbsp;</div> : ''}</td>
-                <td data-testid={makeDataTestId(id, 'amount')}>
-                  {(amount / 100).toFixed(2)}
-                </td>
-              </tr>
+              <CSSTransition classNames='transaction' key={`transaction-${id}`} timeout={500}>
+                <tr data-testid={`transaction-${id}`} key={`transaction-${id}`}>
+                  <td data-testid={makeDataTestId(id, 'id')}>{id}</td>
+                  <td data-testid={makeDataTestId(id, 'userId')}>{userId}</td>
+                  <td data-testid={makeDataTestId(id, 'description')}>{description}</td>
+                  <td data-testid={makeDataTestId(id, 'merchant')}>{merchantId}</td>
+                  <td data-testid={makeDataTestId(id, 'debit')}> {debit ? <div className='tx-type-indicator'>&nbsp;</div> : ''}</td>
+                  <td data-testid={makeDataTestId(id, 'credit')}>{credit ? <div className='tx-type-indicator'>&nbsp;</div> : ''}</td>
+                  <td data-testid={makeDataTestId(id, 'amount')}>
+                    {(amount / 100).toFixed(2)}
+                  </td>
+                </tr>
+              </CSSTransition>
             )).reverse()
           }
-        </tbody>
+        </TransitionGroup>
       </table>
     </div>
   )
@@ -100,5 +103,18 @@ const styles = css`
   }
   tbody tr:hover {
     background-color: darkgray;
+  }
+  .transaction-enter {
+    opacity: 0;
+    color: lightseagreen;
+    transform: scale(0);
+  }
+  .transaction-enter-active {
+    opacity: 1;
+    color: black;
+    transition: opacity 500ms ease-in;
+    transition: color 500ms ease-in;
+    transition: transform 500ms ease-in;
+    transform: scale(1);
   }
 `
