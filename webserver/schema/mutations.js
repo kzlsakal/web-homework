@@ -1,6 +1,7 @@
 const graphql = require('graphql')
 const { GraphQLObjectType, GraphQLString, GraphQLBoolean, GraphQLFloat } = graphql
 const { TransactionModel } = require('../data-models/Transaction')
+const { packageModel } = require('../query-resolvers/utils')
 const TransactionType = require('./transaction-type')
 
 const mutation = new GraphQLObjectType({
@@ -16,9 +17,10 @@ const mutation = new GraphQLObjectType({
         credit: { type: GraphQLBoolean },
         amount: { type: GraphQLFloat }
       },
-      /* eslint-disable-next-line camelcase */
-      resolve (parentValue, { user_id, description, merchant_id, debit, credit, amount }) {
-        return (new TransactionModel({ user_id, description, merchant_id, debit, credit, amount })).save()
+      resolve (parentValue, args) {
+        return (new TransactionModel(args))
+          .save()
+          .then(obj => packageModel(obj)[0])
       }
     }
   }
