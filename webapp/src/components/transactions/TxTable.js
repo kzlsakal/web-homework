@@ -44,10 +44,17 @@ export function TxTable ({ data, editTx }) {
                   <td data-testid={makeDataTestId(id, 'userId')}>{userId}</td>
                   <td data-testid={makeDataTestId(id, 'description')}>{description}</td>
                   <td data-testid={makeDataTestId(id, 'merchant')}>{merchantId}</td>
-                  <td data-testid={makeDataTestId(id, 'debit')}> {debit ? <div className='tx-type-indicator'>&nbsp;</div> : ''}</td>
-                  <td data-testid={makeDataTestId(id, 'credit')}>{credit ? <div className='tx-type-indicator'>&nbsp;</div> : ''}</td>
+                  <td data-testid={makeDataTestId(id, 'debit')}>
+                    {debit ? <div className='tx-type-indicator'>&nbsp;</div> : ''}
+                  </td>
+                  <td data-testid={makeDataTestId(id, 'credit')}>
+                    {credit ? <div className='tx-type-indicator'>&nbsp;</div> : ''}
+                  </td>
                   <td data-testid={makeDataTestId(id, 'amount')}>
-                    {(amount / 100).toFixed(2)}
+                    {(amount / 100).toLocaleString(
+                      undefined,
+                      { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+                    )}
                   </td>
                 </tr>
               </CSSTransition>
