@@ -1,13 +1,15 @@
 import { css } from '@emotion/core'
 import { arrayOf, bool, func, number, shape, string } from 'prop-types'
-import React from 'react'
+import React, { useState } from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
+import { convertToCommaSeparated, convertToRoman } from '../../utils'
 
 const makeDataTestId = (transactionId, fieldName) => (
   `transaction-${transactionId}-${fieldName}`
 )
 
 export function TxTable ({ data, editTx }) {
+  const [romanNumbers, setRomanNumbers] = useState(false)
   return (
     <div css={styles} >
       <table>
@@ -19,7 +21,9 @@ export function TxTable ({ data, editTx }) {
             <th>Merchant ID</th>
             <th>Debit</th>
             <th>Credit</th>
-            <th>Amount</th>
+            <th className='header-amount' onClick={() => setRomanNumbers(!romanNumbers)}>
+              Amount
+            </th>
           </tr>
         </thead>
         <TransitionGroup component='tbody'>
@@ -50,11 +54,10 @@ export function TxTable ({ data, editTx }) {
                   <td data-testid={makeDataTestId(id, 'credit')}>
                     {credit ? <div className='tx-type-indicator'>&nbsp;</div> : ''}
                   </td>
-                  <td data-testid={makeDataTestId(id, 'amount')}>
-                    {(amount / 100).toLocaleString(
-                      undefined,
-                      { minimumFractionDigits: 2, maximumFractionDigits: 2 }
-                    )}
+                  <td className='cell-amount' data-testid={makeDataTestId(id, 'amount')}>
+                    {romanNumbers
+                      ? convertToRoman(amount / 100)
+                      : convertToCommaSeparated(amount / 100)}
                   </td>
                 </tr>
               </CSSTransition>
@@ -83,6 +86,7 @@ const styles = css`
   table {
     border-collapse: separate;
     border-spacing: .3rem 0;
+    margin-bottom: 6rem;
   }
   th {
     background-color: lightsteelblue;
@@ -96,8 +100,26 @@ const styles = css`
     border-top-right-radius: .5rem;
   }
   td {
-    padding: .3rem;
     border-color: white;
+    max-width: 16rem;
+    overflow-wrap: break-word;
+    padding: .3rem;
+    vertical-align: top;
+  }
+  .header-amount {
+    background-color: lightcoral;
+    color: snow;
+    cursor: pointer;
+    text-align: right;
+  }
+  .header-amount:hover {
+    background-color: firebrick;
+    color: snow;
+  }
+  .cell-amount {
+    max-width: 12rem;
+    text-align: right;
+    width: 12rem;
   }
   .tx-type-indicator {
     background-color: lightsteelblue;
