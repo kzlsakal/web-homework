@@ -1,0 +1,25 @@
+mutation AddTransaction(
+    $userId: String!,
+    $description: String!,
+    $amount: Float!,
+    $debit: Boolean!,
+    $credit: Boolean!,
+    $merchantId: String!
+) {
+    addTransaction (
+        user_id: $userId,
+        description: $description,
+        amount: $amount,
+        debit: $debit,
+        credit: $credit,
+        merchant_id: $merchantId
+    ) {
+        id
+        user_id
+        description
+        merchant_id
+        debit
+        credit
+        amount
+    }
+}
