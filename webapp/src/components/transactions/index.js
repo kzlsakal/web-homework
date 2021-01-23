@@ -3,6 +3,7 @@ import { useMutation } from '@apollo/client'
 import { arrayOf, bool, number, shape, string } from 'prop-types'
 import React, { useState } from 'react'
 import AddTransaction from '../../gql/addTransaction.gql'
+import DeleteTransaction from '../../gql/deleteTransaction.gql'
 import GetTransactions from '../../gql/transactions.gql'
 import UpdateTransaction from '../../gql/updateTransaction.gql'
 import { TxForm } from './TxForm'
@@ -46,6 +47,19 @@ export function Transactions ({ data }) {
     })
   }
 
+  const deleteFromCache = (cache, { data }) => {
+    const { transactions } = cache.readQuery({ query: GetTransactions })
+    const deletedId = data.deleteTransaction.id
+    cache.evict({
+      fieldName: 'transactions',
+      broadcast: false
+    })
+    cache.writeQuery({
+      query: GetTransactions,
+      data: { transactions: [...transactions.filter(({ id }) => id !== deletedId)] }
+    })
+  }
+
   const [addTransaction] = useMutation(
     AddTransaction,
     { update: addToCache }
@@ -53,6 +67,10 @@ export function Transactions ({ data }) {
   const [updateTransaction] = useMutation(
     UpdateTransaction,
     { update: editInCache }
+  )
+  const [deleteTransaction] = useMutation(
+    DeleteTransaction,
+    { update: deleteFromCache }
   )
 
   const [editingTx, setEditingTx] = useState(inputTemplate())
@@ -62,6 +80,7 @@ export function Transactions ({ data }) {
     <>
       <TxForm
         addTransaction={addTransaction}
+        deleteTransaction={deleteTransaction}
         formInput={[editingTx, setEditingTx]}
         inputTemplate={inputTemplate}
         result={[userMessage, setUserMessage]}

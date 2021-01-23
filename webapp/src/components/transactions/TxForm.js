@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 
 export function TxForm ({
   addTransaction,
+  deleteTransaction,
   updateTransaction,
   result,
   formInput,
@@ -22,6 +23,15 @@ export function TxForm ({
           ? `Successfully edited transaction ID ${isEditing}`
           : 'Successfully added transaction'
       ))
+      .then(() => setProcessing(false))
+  }
+
+  const handleDelete = (id) => {
+    Promise.resolve(setProcessing(true))
+      .then(() => setUserMessage('Processing Request'))
+      .then(() => deleteTransaction({ variables: { id } }))
+      .then(() => setEditingTx(inputTemplate()))
+      .then(() => setUserMessage(`Transaction ${id} deleted`))
       .then(() => setProcessing(false))
   }
 
@@ -114,6 +124,16 @@ export function TxForm ({
         >
           {editingTx.id ? 'Cancel' : 'Reset'}
         </button>
+        {editingTx.id && (
+          <button
+            className='button-delete'
+            disabled={processing}
+            onClick={() => handleDelete(editingTx.id)}
+            type='button'
+          >
+            Delete
+          </button>
+        )}
         {userMessage}
       </p>
     </form>
@@ -122,6 +142,7 @@ export function TxForm ({
 
 TxForm.propTypes = {
   addTransaction: func,
+  deleteTransaction: func,
   updateTransaction: func,
   result: array,
   formInput: array,
@@ -143,6 +164,16 @@ const styles = css`
   button:active {
     color: snow;
     background-color: steelblue;
+  }
+  .button-delete {
+    background-color: lightcoral;
+  }
+  .button-delete:hover {
+    background-color: indianred;
+  }
+  .button-delete:active {
+    color: snow;
+    background-color: firebrick;
   }
   input {
     margin: .2rem;
