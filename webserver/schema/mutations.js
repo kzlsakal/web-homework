@@ -41,6 +41,19 @@ const mutation = new GraphQLObjectType({
           .then(obj => Object.assign(packageModel(obj)[0], args))
         )
       }
+    },
+    deleteTransaction: {
+      type: TransactionType,
+      args: {
+        id: { type: GraphQLString }
+      },
+      resolve (parentValue, args) {
+        return (TransactionModel
+          .deleteOne({ _id: args.id })
+          .exec()
+          .then(() => args)
+        )
+      }
     }
   }
 })
