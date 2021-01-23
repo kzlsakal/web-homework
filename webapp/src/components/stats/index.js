@@ -2,7 +2,7 @@ import { css } from '@emotion/core'
 import { arrayOf, bool, number, shape, string } from 'prop-types'
 import React from 'react'
 import { VictoryChart, VictoryLabel, VictoryPie, VictoryScatter, VictoryTooltip, VictoryZoomContainer } from 'victory'
-import { createUserExpenseDataLabel, getCreditDebitStats, getUserExpenseData } from './utils'
+import { createUserExpenseDataLabel, getCreditDebitStats, getUserExpenseData } from '../../utils'
 
 export function Stats ({ data }) {
   const creditDebitStats = getCreditDebitStats(data)

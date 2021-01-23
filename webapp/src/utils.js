@@ -40,9 +40,46 @@ export const getUserExpenseData = (data) => {
 }
 
 export const createUserExpenseDataLabel = ({ datum }) =>
-  `User ID: ${datum.name}\nExpenses: ${datum.x.toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-    style: 'currency',
-    currency: 'USD'
-  })}\nCount: ${datum.y}`
+  `User ID: ${datum.name}\nExpenses: ${convertToCurrency(datum.x)}\nCount: ${datum.y}`
+
+export const convertToCurrency = (num) => num.toLocaleString('en-US', {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+  style: 'currency',
+  currency: 'USD'
+})
+
+export const convertToCommaSeparated = (num) => num.toLocaleString(undefined, {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2
+})
+
+const ROMAN_NUMERALS = new Map([
+  [1000, 'M'],
+  [900, 'CM'],
+  [500, 'D'],
+  [400, 'CD'],
+  [100, 'C'],
+  [90, 'XC'],
+  [50, 'L'],
+  [40, 'XL'],
+  [10, 'X'],
+  [9, 'IX'],
+  [5, 'V'],
+  [4, 'IV'],
+  [1, 'I']
+])
+
+export const convertToRoman = (num) => {
+  num = Math.round(num)
+  let result = ''
+
+  for (let [value, symbol] of ROMAN_NUMERALS) {
+    while (num >= value) {
+      result += symbol
+      num -= value
+    }
+  }
+
+  return result
+}
