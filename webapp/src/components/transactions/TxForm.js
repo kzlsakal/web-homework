@@ -4,17 +4,24 @@ import React, { useState } from 'react'
 
 export function TxForm ({
   addTransaction,
+  updateTransaction,
   result,
   formInput,
   inputTemplate
 }) {
   const handleSubmit = (event) => {
     event.preventDefault()
+    const isEditing = editingTx.id
+    const handleQuery = editingTx.id ? updateTransaction : addTransaction
     Promise.resolve(setProcessing(true))
       .then(() => setUserMessage('Processing Request'))
-      .then(() => addTransaction({ variables: editingTx }))
+      .then(() => handleQuery({ variables: editingTx }))
       .then(() => setEditingTx(inputTemplate()))
-      .then(() => setUserMessage('Successfully added transaction'))
+      .then(() => setUserMessage(
+        isEditing
+          ? `Successfully edited transaction ID ${isEditing}`
+          : 'Successfully added transaction'
+      ))
       .then(() => setProcessing(false))
   }
 
@@ -112,6 +119,7 @@ export function TxForm ({
 
 TxForm.propTypes = {
   addTransaction: func,
+  updateTransaction: func,
   result: array,
   formInput: array,
   inputTemplate: func

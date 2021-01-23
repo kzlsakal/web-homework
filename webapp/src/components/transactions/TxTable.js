@@ -1,5 +1,5 @@
 import { css } from '@emotion/core'
-import { arrayOf, bool, number, shape, string } from 'prop-types'
+import { arrayOf, bool, func, number, shape, string } from 'prop-types'
 import React from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 
@@ -7,7 +7,7 @@ const makeDataTestId = (transactionId, fieldName) => (
   `transaction-${transactionId}-${fieldName}`
 )
 
-export function TxTable ({ data }) {
+export function TxTable ({ data, editTx }) {
   return (
     <div css={styles} >
       <table>
@@ -34,7 +34,12 @@ export function TxTable ({ data }) {
               amount
             }) => (
               <CSSTransition classNames='transaction' key={`transaction-${id}`} timeout={500}>
-                <tr data-testid={`transaction-${id}`} key={`transaction-${id}`}>
+                <tr
+                  data-testid={`transaction-${id}`}
+                  onClick={() => editTx({
+                    id, userId, description, merchantId, debit, credit, amount
+                  })}
+                >
                   <td data-testid={makeDataTestId(id, 'id')}>{id}</td>
                   <td data-testid={makeDataTestId(id, 'userId')}>{userId}</td>
                   <td data-testid={makeDataTestId(id, 'description')}>{description}</td>
@@ -63,7 +68,8 @@ TxTable.propTypes = {
     debit: bool,
     credit: bool,
     amount: number
-  }))
+  })),
+  editTx: func
 }
 
 const styles = css`
@@ -103,6 +109,7 @@ const styles = css`
   }
   tbody tr:hover {
     background-color: darkgray;
+    cursor: pointer;
   }
   .transaction-enter {
     opacity: 0;

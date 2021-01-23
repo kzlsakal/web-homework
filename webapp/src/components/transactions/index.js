@@ -4,6 +4,7 @@ import { arrayOf, bool, number, shape, string } from 'prop-types'
 import React, { useState } from 'react'
 import AddTransaction from '../../gql/addTransaction.gql'
 import GetTransactions from '../../gql/transactions.gql'
+import UpdateTransaction from '../../gql/updateTransaction.gql'
 import { TxForm } from './TxForm'
 import { TxTable } from './TxTable'
 
@@ -27,9 +28,31 @@ export function Transactions ({ data }) {
     })
   }
 
+  const editInCache = (cache, { data }) => {
+    const { transactions } = cache.readQuery({ query: GetTransactions })
+    const { updateTransaction } = data
+    const newTransactions = []
+    for (let tx of transactions) {
+      if (tx.id === updateTransaction.id) {
+        newTransactions.push(updateTransaction)
+      } else {
+        newTransactions.push(tx)
+      }
+    }
+
+    cache.writeQuery({
+      query: GetTransactions,
+      data: { transactions: newTransactions }
+    })
+  }
+
   const [addTransaction] = useMutation(
     AddTransaction,
     { update: addToCache }
+  )
+  const [updateTransaction] = useMutation(
+    UpdateTransaction,
+    { update: editInCache }
   )
 
   const [editingTx, setEditingTx] = useState(inputTemplate())
@@ -42,8 +65,9 @@ export function Transactions ({ data }) {
         formInput={[editingTx, setEditingTx]}
         inputTemplate={inputTemplate}
         result={[userMessage, setUserMessage]}
+        updateTransaction={updateTransaction}
       />
-      <TxTable data={data} />
+      <TxTable data={data} editTx={setEditingTx} />
     </>
   )
 }
