@@ -50,7 +50,10 @@ export function TxForm ({
 
   return (
     <form css={styles} onSubmit={handleSubmit}>
-      <h3>Add new transaction</h3>
+      <h3>{editingTx.id
+        ? `Editing Transaction ID ${editingTx.id}`
+        : 'Add new transaction'}
+      </h3>
       <input
         name='userId'
         onChange={handleChange}
@@ -109,7 +112,7 @@ export function TxForm ({
           onClick={() => setEditingTx(inputTemplate())}
           type='button'
         >
-          Reset
+          {editingTx.id ? 'Cancel' : 'Reset'}
         </button>
         {userMessage}
       </p>
