@@ -58,7 +58,7 @@ export function Stats ({ data }) {
               strokeWidth: 0.3
             }} />
           )}
-          labelRadius={100}
+          labelRadius={26}
         />
       </div>
       <div>
