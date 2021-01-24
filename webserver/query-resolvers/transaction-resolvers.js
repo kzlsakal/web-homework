@@ -18,7 +18,30 @@ async function findOne (id) {
   return packageModel(transaction)[0] || null
 }
 
+async function saveOne (tx) {
+  const transaction = await (new TransactionModel(tx)).save()
+
+  return packageModel(transaction)[0] || null
+}
+
+async function updateOne (tx) {
+  const query = TransactionModel.findOneAndUpdate({ _id: tx.id }, tx)
+  const updatedTx = await query.exec()
+
+  return Object.assign(packageModel(updatedTx)[0], tx) || null
+}
+
+async function deleteOne (tx) {
+  const query = TransactionModel.deleteOne({ _id: tx.id })
+  await query.exec()
+
+  return tx
+}
+
 module.exports = {
+  deleteOne,
   find,
-  findOne
+  findOne,
+  saveOne,
+  updateOne
 }
