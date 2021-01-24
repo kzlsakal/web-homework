@@ -23,7 +23,11 @@ export function TxTable ({ data, editTx, txInfo }) {
             <th>Merchant ID</th>
             <th>Debit</th>
             <th>Credit</th>
-            <th className='header-amount' onClick={() => setRomanNumbers(!romanNumbers)}>
+            <th
+              className='header-amount'
+              data-testid={'header-amount'}
+              onClick={() => setRomanNumbers(!romanNumbers)}
+            >
               Amount
             </th>
           </tr>

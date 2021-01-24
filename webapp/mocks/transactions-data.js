@@ -6,7 +6,7 @@ const transactions = [
     'merchant_id': 'walmart',
     'debit': true,
     'credit': false,
-    'amount': 150,
+    'amount': 15000,
     '__typename': 'Transaction'
   },
   {
@@ -16,7 +16,7 @@ const transactions = [
     'merchant_id': 'walmart',
     'debit': false,
     'credit': true,
-    'amount': 250,
+    'amount': 25000,
     '__typename': 'Transaction'
   },
   {
@@ -26,7 +26,7 @@ const transactions = [
     'merchant_id': 'walmart',
     'debit': false,
     'credit': true,
-    'amount': 100,
+    'amount': 10000,
     '__typename': 'Transaction'
   }
 ]
