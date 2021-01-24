@@ -1,6 +1,6 @@
 import { css } from '@emotion/core'
 import React from 'react'
-import { BrowserRouter as Router, Link, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Link, Redirect, Route, Switch } from 'react-router-dom'
 import { Home } from './home'
 import { Statistics } from './stats'
 
@@ -19,8 +19,11 @@ function AppRouter () {
           </ul>
         </nav>
         <div className='main-content' css={contentStyle}>
-          <Route component={Home} exact path='/' />
-          <Route component={Statistics} exact path='/stats' />
+          <Switch>
+            <Route component={() => <Redirect to='/1' />} exact path='/' />
+            <Route component={Statistics} exact path='/stats' />
+            <Route component={Home} path='/:pageNo' />
+          </Switch>
         </div>
       </div>
     </Router>

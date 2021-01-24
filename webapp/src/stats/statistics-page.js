@@ -4,7 +4,9 @@ import { Stats } from '../components/stats'
 import GetTransactions from '../gql/transactions.gql'
 
 export function Statistics () {
-  const { loading, error, data = {} } = useQuery(GetTransactions)
+  const { loading, error, data = {} } = useQuery(GetTransactions, {
+    variables: { skip: 0, limit: 0 }
+  })
 
   if (loading) {
     return (

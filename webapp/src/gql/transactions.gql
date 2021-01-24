@@ -1,5 +1,5 @@
-query GetTransactions {
-    transactions {
+query GetTransactions($skip: Int!, $limit: Int!) {
+    transactions(_skip: $skip, _limit: $limit) {
         id
         user_id
         description

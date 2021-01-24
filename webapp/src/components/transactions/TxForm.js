@@ -89,14 +89,6 @@ export function TxForm ({
         value={editingTx.merchantId}
       />
       <label><input
-        checked={editingTx.credit}
-        name='txType'
-        onChange={handleChange}
-        required
-        type='radio'
-        value='credit'
-      /> Credit </label>
-      <label><input
         checked={editingTx.debit}
         name='txType'
         onChange={handleChange}
@@ -104,6 +96,14 @@ export function TxForm ({
         type='radio'
         value='debit'
       /> Debit </label>
+      <label><input
+        checked={editingTx.credit}
+        name='txType'
+        onChange={handleChange}
+        required
+        type='radio'
+        value='credit'
+      /> Credit </label>
       <input
         max={2e11}
         min='0'

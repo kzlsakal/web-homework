@@ -3,15 +3,17 @@ import { arrayOf, bool, func, number, shape, string } from 'prop-types'
 import React, { useState } from 'react'
 import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import { convertToCommaSeparated, convertToRoman } from '../../utils'
+import { Paginator } from './Paginator'
 
 const makeDataTestId = (transactionId, fieldName) => (
   `transaction-${transactionId}-${fieldName}`
 )
 
-export function TxTable ({ data, editTx }) {
+export function TxTable ({ data, editTx, txInfo }) {
   const [romanNumbers, setRomanNumbers] = useState(false)
   return (
     <div css={styles} >
+      <Paginator txCount={txInfo?.count} />
       <table>
         <thead>
           <tr>
@@ -61,7 +63,7 @@ export function TxTable ({ data, editTx }) {
                   </td>
                 </tr>
               </CSSTransition>
-            )).reverse()
+            ))
           }
         </TransitionGroup>
       </table>
@@ -79,7 +81,8 @@ TxTable.propTypes = {
     credit: bool,
     amount: number
   })),
-  editTx: func
+  editTx: func,
+  txInfo: shape({ count: number })
 }
 
 const styles = css`
@@ -87,6 +90,7 @@ const styles = css`
     border-collapse: separate;
     border-spacing: .3rem 0;
     margin-bottom: 6rem;
+    width: 100vh;
   }
   th {
     background-color: lightsteelblue;
@@ -143,21 +147,19 @@ const styles = css`
   .transaction-enter {
     opacity: 0;
     color: lightseagreen;
-    transform: scale(0);
   }
   .transaction-enter-active {
     opacity: 1;
     color: black;
     transition: opacity 500ms ease-in;
     transition: color 500ms ease-in;
-    transition: transform 500ms ease-in;
-    transform: scale(1);
+    transition: opacity 500ms ease-in-out;
   }
   .transaction-exit {
-    transform: scale(1);
+    opacity: 1;
   }
   .transaction-exit-active {
-    transition: transform 500ms ease-out;
-    transform: scale(0);
+    transition: opacity 500ms ease-out;
+    opacity: 0;
   }
 `

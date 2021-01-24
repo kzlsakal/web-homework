@@ -1,12 +1,18 @@
 import { useQuery } from '@apollo/client'
 import React, { Fragment } from 'react'
+import { useParams } from 'react-router-dom'
 import { Transactions } from '../components/transactions'
 import GetTransactions from '../gql/transactions.gql'
+import TransactionsInfo from '../gql/transactionsInfo.gql'
 
 export function Home () {
-  const { loading, error, data = {} } = useQuery(GetTransactions)
+  const { pageNo } = useParams()
+  const { infoLoading, infoError, data: infoData = {} } = useQuery(TransactionsInfo)
+  const { loading, error, data = {}, refetch } = useQuery(GetTransactions, {
+    variables: { skip: pageNo > 0 ? pageNo - 1 : 0, limit: 10 }
+  })
 
-  if (loading) {
+  if (loading || infoLoading) {
     return (
       <Fragment>
         Loading...
@@ -14,7 +20,7 @@ export function Home () {
     )
   }
 
-  if (error) {
+  if (error || infoError) {
     return (
       <Fragment>
         ¯\_(ツ)_/¯
@@ -24,7 +30,11 @@ export function Home () {
 
   return (
     <Fragment>
-      <Transactions data={data.transactions} />
+      <Transactions
+        data={data.transactions}
+        refetch={refetch}
+        txInfo={infoData.transactionsInfo}
+      />
     </Fragment>
   )
 }

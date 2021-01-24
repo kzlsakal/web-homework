@@ -1,15 +1,17 @@
 
 import { useMutation } from '@apollo/client'
-import { arrayOf, bool, number, shape, string } from 'prop-types'
+import { arrayOf, bool, func, number, shape, string } from 'prop-types'
 import React, { useState } from 'react'
+import { useParams } from 'react-router-dom'
 import AddTransaction from '../../gql/addTransaction.gql'
 import DeleteTransaction from '../../gql/deleteTransaction.gql'
 import GetTransactions from '../../gql/transactions.gql'
+import TransactionsInfo from '../../gql/transactionsInfo.gql'
 import UpdateTransaction from '../../gql/updateTransaction.gql'
 import { TxForm } from './TxForm'
 import { TxTable } from './TxTable'
 
-export function Transactions ({ data }) {
+export function Transactions ({ data, refetch, txInfo }) {
   const inputTemplate = () => ({
     id: '',
     userId: '',
@@ -21,42 +23,76 @@ export function Transactions ({ data }) {
   })
 
   const addToCache = (cache, { data }) => {
-    const { transactions } = cache.readQuery({ query: GetTransactions })
-    const newTransaction = data.addTransaction
+    try {
+      const queryVariables = { skip: 0, limit: 10 }
+      const { transactions } = cache.readQuery({
+        query: GetTransactions,
+        variables: queryVariables
+      })
+      const newTransaction = data.addTransaction
+
+      cache.writeQuery({
+        query: GetTransactions,
+        variables: queryVariables,
+        data: { transactions: [newTransaction, ...transactions] }
+      })
+    } catch {
+      refetch()
+    }
+
+    const { transactionsInfo } = cache.readQuery({ query: TransactionsInfo })
     cache.writeQuery({
-      query: GetTransactions,
-      data: { transactions: [...transactions, newTransaction] }
+      query: TransactionsInfo,
+      data: { transactionsInfo: {
+        ...transactionsInfo,
+        count: transactionsInfo.count + 1
+      } }
     })
   }
 
   const editInCache = (cache, { data }) => {
-    const { transactions } = cache.readQuery({ query: GetTransactions })
-    const { updateTransaction } = data
-    const newTransactions = []
-    for (let tx of transactions) {
-      if (tx.id === updateTransaction.id) {
-        newTransactions.push(updateTransaction)
-      } else {
-        newTransactions.push(tx)
-      }
-    }
+    try {
+      const queryVariables = { skip: pageNo > 0 ? pageNo - 1 : 0, limit: 10 }
+      const { transactions } = cache.readQuery({
+        query: GetTransactions,
+        variables: queryVariables
+      })
+      const { updateTransaction } = data
+      const newTransactions = []
 
-    cache.writeQuery({
-      query: GetTransactions,
-      data: { transactions: newTransactions }
-    })
+      for (let tx of transactions) {
+        if (tx.id === updateTransaction.id) {
+          newTransactions.push(updateTransaction)
+        } else {
+          newTransactions.push(tx)
+        }
+      }
+
+      cache.writeQuery({
+        query: GetTransactions,
+        data: { transactions: newTransactions }
+      })
+    } catch {
+      refetch()
+    }
   }
 
   const deleteFromCache = (cache, { data }) => {
-    const { transactions } = cache.readQuery({ query: GetTransactions })
-    const deletedId = data.deleteTransaction.id
+    const { transactionsInfo } = cache.readQuery({ query: TransactionsInfo })
+
     cache.evict({
       fieldName: 'transactions',
       broadcast: false
     })
+
+    refetch()
+
     cache.writeQuery({
-      query: GetTransactions,
-      data: { transactions: [...transactions.filter(({ id }) => id !== deletedId)] }
+      query: TransactionsInfo,
+      data: { transactionsInfo: {
+        ...transactionsInfo,
+        count: transactionsInfo.count - 1
+      } }
     })
   }
 
@@ -75,6 +111,7 @@ export function Transactions ({ data }) {
 
   const [editingTx, setEditingTx] = useState(inputTemplate())
   const [userMessage, setUserMessage] = useState('')
+  const { pageNo } = useParams()
 
   return (
     <>
@@ -86,7 +123,7 @@ export function Transactions ({ data }) {
         result={[userMessage, setUserMessage]}
         updateTransaction={updateTransaction}
       />
-      <TxTable data={data} editTx={setEditingTx} />
+      <TxTable data={data} editTx={setEditingTx} txInfo={txInfo} />
     </>
   )
 }
@@ -100,5 +137,7 @@ Transactions.propTypes = {
     debit: bool,
     credit: bool,
     amount: number
-  }))
+  })),
+  refetch: func,
+  txInfo: shape({ count: number })
 }
