@@ -9,7 +9,7 @@ const makeDataTestId = (transactionId, fieldName) => (
   `transaction-${transactionId}-${fieldName}`
 )
 
-export function TxTable ({ data, editTx, txInfo }) {
+export function TxTable ({ data = [], editTx, txInfo }) {
   const [romanNumbers, setRomanNumbers] = useState(false)
   return (
     <div css={styles} >

@@ -59,7 +59,7 @@ export function TxForm ({
   const [processing, setProcessing] = useState(false)
 
   return (
-    <form css={styles} onSubmit={handleSubmit}>
+    <form css={styles} data-testid={'form-tx'} onSubmit={handleSubmit}>
       <h3>{editingTx.id
         ? `Editing Transaction ID ${editingTx.id}`
         : 'Add new transaction'}
