@@ -8,7 +8,7 @@ const TransactionSchema = new Schema({
   debit: { type: Boolean, default: null },
   description: { type: String, default: null },
   merchant_id: { type: String, default: null }
-})
+}, { timestamps: true })
 
 const TransactionModel = model('transaction', TransactionSchema)
 

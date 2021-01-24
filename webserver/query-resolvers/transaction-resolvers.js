@@ -2,9 +2,17 @@ const { TransactionModel } = require('../data-models/Transaction')
 const { packageModel } = require('./utils.js')
 
 async function find (criteria) {
-  const query = Object.keys(criteria).length
-    ? TransactionModel.find(criteria)
-    : TransactionModel.find()
+  const limit = criteria._limit ?? 10
+  delete criteria._limit
+  const skip = criteria._skip ?? 0
+  delete criteria._skip
+
+  const query =
+    TransactionModel
+      .find(criteria)
+      .sort({ createdAt: -1 })
+      .skip(skip * limit)
+      .limit(limit)
 
   const transactions = await query.exec()
 
@@ -38,10 +46,18 @@ async function deleteOne (tx) {
   return tx
 }
 
+async function totalCount () {
+  const query = TransactionModel.countDocuments()
+  const count = await query.exec()
+
+  return { count }
+}
+
 module.exports = {
   deleteOne,
   find,
   findOne,
   saveOne,
+  totalCount,
   updateOne
 }

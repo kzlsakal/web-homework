@@ -1,13 +1,15 @@
 const graphql = require('graphql')
 const TransactionType = require('./transaction-type')
 const Transactions = require('../query-resolvers/transaction-resolvers.js')
+const TransactionsInfoType = require('./transactions-info-type')
 
 const {
   GraphQLBoolean,
   GraphQLFloat,
   GraphQLList,
   GraphQLObjectType,
-  GraphQLString
+  GraphQLString,
+  GraphQLInt
 } = graphql
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
@@ -29,11 +31,23 @@ const RootQuery = new GraphQLObjectType({
         debit: { type: GraphQLBoolean },
         description: { type: GraphQLString },
         merchant_id: { type: GraphQLString },
-        user_id: { type: GraphQLString }
+        user_id: { type: GraphQLString },
+        _limit: { type: GraphQLInt },
+        _skip: { type: GraphQLInt }
       },
       resolve (parentValue, args) {
         return Transactions.find(args)
       }
+    },
+    transactionsInfo: {
+      type: TransactionsInfoType,
+      args: {
+        count: { type: GraphQLInt }
+      },
+      resolve (parentValue, args) {
+        return Transactions.totalCount()
+      }
+
     }
   })
 })
