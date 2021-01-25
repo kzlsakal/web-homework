@@ -1,5 +1,6 @@
 
 import { useMutation } from '@apollo/client'
+import { css, Global } from '@emotion/core'
 import { arrayOf, bool, func, number, shape, string } from 'prop-types'
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -124,6 +125,7 @@ export function Transactions ({ data, refetch, txInfo }) {
 
   return (
     <>
+      <Global styles={css`body { overflow-y: scroll; }`} />
       <TxForm
         addTransaction={addTransaction}
         deleteTransaction={deleteTransaction}
