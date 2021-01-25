@@ -78,15 +78,24 @@ export function Transactions ({ data, refetch, txInfo }) {
   }
 
   const deleteFromCache = (cache, { data }) => {
+    try {
+      const queryVariables = { skip: pageNo > 0 ? pageNo - 1 : 0, limit: 10 }
+      const { transactions } = cache.readQuery({ query: GetTransactions })
+      const deletedId = data.deleteTransaction.id
+      cache.evict({
+        fieldName: 'transactions',
+        broadcast: false
+      })
+      cache.writeQuery({
+        query: GetTransactions,
+        variables: queryVariables,
+        data: { transactions: [...transactions.filter(({ id }) => id !== deletedId)] }
+      })
+    } catch {
+      refetch()
+    }
+
     const { transactionsInfo } = cache.readQuery({ query: TransactionsInfo })
-
-    cache.evict({
-      fieldName: 'transactions',
-      broadcast: false
-    })
-
-    refetch()
-
     cache.writeQuery({
       query: TransactionsInfo,
       data: { transactionsInfo: {

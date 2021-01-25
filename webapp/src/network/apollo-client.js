@@ -8,7 +8,19 @@ const request = async operation => {
   operation.setContext({ headers })
 }
 
-const cache = new InMemoryCache()
+const cache = new InMemoryCache({
+  typePolicies: {
+    Query: {
+      fields: {
+        transactions: {
+          merge (existing, incoming) {
+            return incoming
+          }
+        }
+      }
+    }
+  }
+})
 
 const requestLink = new ApolloLink(
   (operation, forward) =>
