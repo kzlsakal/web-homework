@@ -24,6 +24,10 @@ export function TxForm ({
           : 'Successfully added transaction'
       ))
       .then(() => setProcessing(false))
+      .catch(() => {
+        setUserMessage('There was an error with the request')
+        setProcessing(false)
+      })
   }
 
   const handleDelete = (id) => {
@@ -33,6 +37,10 @@ export function TxForm ({
       .then(() => setEditingTx(inputTemplate()))
       .then(() => setUserMessage(`Transaction ${id} deleted`))
       .then(() => setProcessing(false))
+      .catch(() => {
+        setUserMessage('There was an error with the request')
+        setProcessing(false)
+      })
   }
 
   const handleChange = (event) => {
