@@ -68,7 +68,7 @@ defmodule Homework.Transactions do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_transaction(attrs \\ %{}) do
+  def add_transaction(attrs \\ %{}) do
     %Transaction{}
     |> Transaction.changeset(attrs)
     |> Repo.insert()

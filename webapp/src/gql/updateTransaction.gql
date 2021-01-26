@@ -1,11 +1,11 @@
 mutation UpdateTransaction(
-    $id: String!,
-    $userId: String!,
+    $id: ID!,
+    $userId: ID!,
     $description: String!,
-    $amount: Float!,
+    $amount: Int!,
     $debit: Boolean!,
     $credit: Boolean!,
-    $merchantId: String!
+    $merchantId: ID!
 ) {
     updateTransaction (
         id: $id,

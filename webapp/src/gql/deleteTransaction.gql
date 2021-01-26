@@ -1,4 +1,4 @@
-mutation DeleteTransaction($id: String!) {
+mutation DeleteTransaction($id: ID!) {
     deleteTransaction (id: $id) {
         id
     }

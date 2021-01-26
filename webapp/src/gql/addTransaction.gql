@@ -1,10 +1,10 @@
 mutation AddTransaction(
-    $userId: String!,
+    $userId: ID!,
     $description: String!,
-    $amount: Float!,
+    $amount: Int!,
     $debit: Boolean!,
     $credit: Boolean!,
-    $merchantId: String!
+    $merchantId: ID!
 ) {
     addTransaction (
         user_id: $userId,
