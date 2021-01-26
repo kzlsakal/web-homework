@@ -22,6 +22,7 @@ defmodule Homework.Transactions do
     limit_transactions = (limit === 0 && 10) || limit
 
     Transaction
+    |> order_by(desc: :inserted_at)
     |> limit(^limit_transactions)
     |> offset(^skip_transactions)
     |> Repo.all()
