@@ -12,7 +12,14 @@ defmodule HomeworkWeb.Schema do
   query do
     @desc "Get all Transactions"
     field(:transactions, list_of(:transaction)) do
+      arg(:_skip, non_null(:integer))
+      arg(:_limit, non_null(:integer))
       resolve(&TransactionsResolver.transactions/3)
+    end
+
+    @desc "Get transactions count"
+    field(:transactions_info, :transactions_info) do
+      resolve(&TransactionsResolver.transactions_info/3)
     end
 
     @desc "Get all Users"

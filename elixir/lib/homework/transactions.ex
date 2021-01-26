@@ -17,8 +17,27 @@ defmodule Homework.Transactions do
       [%Transaction{}, ...]
 
   """
-  def list_transactions(_args) do
-    Repo.all(Transaction)
+  def list_transactions(%{_limit: limit, _skip: skip}) do
+    skip_transactions = limit * skip
+    limit_transactions = (limit === 0 && 10) || limit
+
+    Transaction
+    |> limit(^limit_transactions)
+    |> offset(^skip_transactions)
+    |> Repo.all()
+  end
+
+  @doc """
+  Returns the information about all transactions
+
+  ## Examples
+
+      iex> list_transactions([])
+      %transaction_info{}
+
+  """
+  def transactions_info(_args) do
+    %{:count => Repo.one(from(t in "transactions", select: fragment("count(*)")))}
   end
 
   @doc """

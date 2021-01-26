@@ -11,6 +11,13 @@ defmodule HomeworkWeb.Resolvers.TransactionsResolver do
   end
 
   @doc """
+  Get information about all transactions
+  """
+  def transactions_info(_root, args, _info) do
+    {:ok, Transactions.transactions_info(args)}
+  end
+
+  @doc """
   Get the user associated with a transaction
   """
   def user(_root, _args, %{source: %{user_id: user_id}}) do
