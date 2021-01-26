@@ -13,17 +13,17 @@ export const getCreditDebitStats = (data) => {
 
 export const getUserExpenseData = (data) => {
   const expensesPerUser = {}
-  data.forEach(({ user_id: userId, amount }) => {
-    if (!expensesPerUser[userId]) {
-      expensesPerUser[userId] = {
-        name: userId,
+  data.forEach(({ user, amount }) => {
+    if (!expensesPerUser[user.id]) {
+      expensesPerUser[user.id] = {
+        name: `${user.firstName} ${user.lastName}`,
         x: amount / 100,
         y: 1,
         size: 12
       }
     } else {
-      expensesPerUser[userId].x += amount / 100
-      expensesPerUser[userId].y += 1
+      expensesPerUser[user.id].x += amount / 100
+      expensesPerUser[user.id].y += 1
     }
   })
   let maxExpense = 1000
@@ -40,7 +40,7 @@ export const getUserExpenseData = (data) => {
 }
 
 export const createUserExpenseDataLabel = ({ datum }) =>
-  `User ID: ${datum.name}\nExpenses: ${convertToCurrency(datum.x)}\nCount: ${datum.y}`
+  `User: ${datum.name}\nExpenses: ${convertToCurrency(datum.x)}\nCount: ${datum.y}`
 
 export const convertToCurrency = (num) => num.toLocaleString('en-US', {
   minimumFractionDigits: 2,

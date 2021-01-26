@@ -1,9 +1,17 @@
 query GetTransactions($skip: Int!, $limit: Int!) {
     transactions(_skip: $skip, _limit: $limit) {
         id
-        user_id
+        user {
+            id,
+            firstName,
+            lastName
+        }
         description
-        merchant_id
+        merchant {
+            id,
+            name,
+            description
+        }
         debit
         credit
         amount

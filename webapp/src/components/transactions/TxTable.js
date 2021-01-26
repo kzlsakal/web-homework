@@ -18,9 +18,9 @@ export function TxTable ({ data = [], editTx, txInfo }) {
         <thead>
           <tr>
             <th>ID</th>
-            <th>User ID</th>
+            <th>User</th>
             <th>Description</th>
-            <th>Merchant ID</th>
+            <th>Merchant</th>
             <th>Debit</th>
             <th>Credit</th>
             <th
@@ -36,9 +36,9 @@ export function TxTable ({ data = [], editTx, txInfo }) {
           {
             data.map(({
               id,
-              user_id: userId,
+              user,
               description,
-              merchant_id: merchantId,
+              merchant,
               debit,
               credit,
               amount
@@ -47,13 +47,25 @@ export function TxTable ({ data = [], editTx, txInfo }) {
                 <tr
                   data-testid={`transaction-${id}`}
                   onClick={() => editTx({
-                    id, userId, description, merchantId, debit, credit, amount
+                    id,
+                    userId: user.id,
+                    description,
+                    merchantId: merchant.id,
+                    debit,
+                    credit,
+                    amount
                   })}
                 >
                   <td data-testid={makeDataTestId(id, 'id')}>{id}</td>
-                  <td data-testid={makeDataTestId(id, 'userId')}>{userId}</td>
+                  <td
+                    data-testid={makeDataTestId(id, 'userId')}
+                    title={`User ID: ${user.id}`}
+                  >{`${user.firstName} ${user.lastName}`}</td>
                   <td data-testid={makeDataTestId(id, 'description')}>{description}</td>
-                  <td data-testid={makeDataTestId(id, 'merchant')}>{merchantId}</td>
+                  <td
+                    data-testid={makeDataTestId(id, 'merchant')}
+                    title={`Merchant ID: ${merchant.id}`}
+                  >{`${merchant.name} [${merchant.description}]`}</td>
                   <td data-testid={makeDataTestId(id, 'debit')}>
                     {debit ? <div className='tx-type-indicator'>&nbsp;</div> : ''}
                   </td>

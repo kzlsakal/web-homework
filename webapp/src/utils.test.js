@@ -19,13 +19,13 @@ describe('getCreditDebitStats()', () => {
 describe('getUserExpenseData()', () => {
   it('should convert data to expense per user format', () => {
     const actual = getUserExpenseData(transactions)
-    expect(actual[0].name).toBe('employee4')
+    expect(actual[0].name).toBe('employee 4')
     expect(actual[0].x).toBe(150)
     expect(actual[0].y).toBe(1)
-    expect(actual[1].name).toBe('employee3')
+    expect(actual[1].name).toBe('employee 3')
     expect(actual[1].x).toBe(250)
     expect(actual[1].y).toBe(1)
-    expect(actual[2].name).toBe('employee5')
+    expect(actual[2].name).toBe('employee 5')
     expect(actual[2].x).toBe(100)
     expect(actual[2].y).toBe(1)
   })
@@ -38,7 +38,7 @@ describe('createUserExpenseDataLabel()', () => {
       x: 200,
       y: 2
     } })
-    const expected = 'User ID: Bob\nExpenses: $200.00\nCount: 2'
+    const expected = 'User: Bob\nExpenses: $200.00\nCount: 2'
     expect(actual).toBe(expected)
   })
 })

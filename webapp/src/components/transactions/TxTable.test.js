@@ -20,11 +20,11 @@ describe('Transactions Table', () => {
       .getByTestId('transaction-5d5c1f747e01cd704f18f865-description'))
       .toHaveTextContent('refund')
   })
-  it('should show user "employee3" with merchant "walmart"', () => {
+  it('should show user "employee3" with merchant "target"', () => {
     render(<TxTable data={transactions} />, { wrapper: HistoryWrapper })
     expect(screen
       .getByTestId('transaction-5d5c1f747e01cd704f18f864-merchant'))
-      .toHaveTextContent('walmart')
+      .toHaveTextContent('target')
   })
   it('should show "credit" indicator for employee3\'s transaction', () => {
     render(<TxTable data={transactions} />, { wrapper: HistoryWrapper })
