@@ -14,9 +14,29 @@ defmodule Homework.SeedDatabase do
   alias Homework.Repo
   alias Homework.Transactions.Transaction
   alias Homework.Users.User
+  alias Homework.Companies.Company
   alias Homework.Merchants.Merchant
   import UUID, only: [uuid1: 1]
   import Faker
+
+
+  #
+  # Populate Companies
+  #
+  company_id_list = Enum.map(1..10, fn _ -> UUID.uuid1() end)
+  companies_list = Enum.map(company_id_list, fn id ->
+    inserted_date = NaiveDateTime.truncate(Faker.DateTime.backward(15), :second)
+    credit_line = :rand.uniform(399) * 10000
+    %{
+      id: id,
+      name: Faker.Company.En.name(),
+      credit_line: credit_line,
+      available_credit: credit_line,
+      inserted_at: inserted_date,
+      updated_at: inserted_date
+    }
+    end
+  )
 
   #
   # Populate Users
@@ -30,6 +50,7 @@ defmodule Homework.SeedDatabase do
       first_name: Faker.Person.first_name(),
       last_name: Faker.Person.last_name(),
       dob: "#{month}/#{day}/#{year}",
+      company_id: Enum.random(company_id_list),
       inserted_at: inserted_date,
       updated_at: inserted_date
     }
@@ -46,21 +67,6 @@ defmodule Homework.SeedDatabase do
       id: id,
       name: Faker.Company.En.name(),
       description: Faker.Industry.sector(),
-      inserted_at: inserted_date,
-      updated_at: inserted_date
-    }
-    end
-  )
-
-  #
-  # Populate Companies (to be added)
-  #
-  company_id_list = Enum.map(1..10, fn _ -> UUID.uuid1() end)
-  company_list = Enum.map(company_id_list, fn id ->
-    inserted_date = NaiveDateTime.truncate(Faker.DateTime.backward(15), :second)
-    %{
-      id: id,
-      name: Faker.Company.En.name(),
       inserted_at: inserted_date,
       updated_at: inserted_date
     }
@@ -90,15 +96,17 @@ defmodule Homework.SeedDatabase do
   )
 
   #
-  # Delete existing Transactions, Users, and Merchants in order
+  # Delete existing Transactions, Users, Companies, and Merchants in order
   #
   Repo.delete_all(Transaction)
   Repo.delete_all(User)
+  Repo.delete_all(Company)
   Repo.delete_all(Merchant)
 
   #
   # Insert Users, Merchants, and Transactions in order
   #
+  Repo.insert_all(Company, companies_list)
   Repo.insert_all(User, users_list)
   Repo.insert_all(Merchant, merchants_list)
   Repo.insert_all(Transaction, transactions_list)
