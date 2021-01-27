@@ -6,7 +6,7 @@ defmodule Homework.Companies.Company do
   schema "companies" do
     field(:name, :string)
     field(:credit_line, :integer)
-    field(:available_credit, :integer)
+    field(:available_credit, :integer, virtual: true)
 
     timestamps()
   end
@@ -14,7 +14,7 @@ defmodule Homework.Companies.Company do
   @doc false
   def changeset(company, attrs) do
     company
-    |> cast(attrs, [:name, :credit_line, :available_credit])
+    |> cast(attrs, [:name, :credit_line])
     |> validate_required([:name, :credit_line])
   end
 end

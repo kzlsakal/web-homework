@@ -5,7 +5,7 @@ defmodule Homework.Companies do
 
   import Ecto.Query, warn: false
   alias Homework.Repo
-
+  alias Homework.Users.User
   alias Homework.Companies.Company
 
   @doc """
@@ -35,7 +35,23 @@ defmodule Homework.Companies do
       ** (Ecto.NoResultsError)
 
   """
-  def get_company!(id), do: Repo.get!(Company, id)
+  def get_company!(id) do
+    company = Repo.get!(Company, id)
+
+    spent_amount =
+      Repo.one(
+        from(t in "transactions",
+          left_join: u in User,
+          on: t.user_id == u.id,
+          where: u.company_id == ^id,
+          select: sum(t.amount)
+        )
+      )
+
+    %{credit_line: credit_line} = company
+
+    Map.put(company, :available_credit, credit_line - spent_amount)
+  end
 
   @doc """
   Creates a company.

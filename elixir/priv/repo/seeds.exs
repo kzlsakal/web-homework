@@ -26,12 +26,10 @@ defmodule Homework.SeedDatabase do
   company_id_list = Enum.map(1..10, fn _ -> UUID.uuid1() end)
   companies_list = Enum.map(company_id_list, fn id ->
     inserted_date = NaiveDateTime.truncate(Faker.DateTime.backward(15), :second)
-    credit_line = :rand.uniform(399) * 10000
     %{
       id: id,
       name: Faker.Company.En.name(),
-      credit_line: credit_line,
-      available_credit: credit_line,
+      credit_line: :rand.uniform(399) * 100000,
       inserted_at: inserted_date,
       updated_at: inserted_date
     }
