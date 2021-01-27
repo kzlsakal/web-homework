@@ -86,6 +86,15 @@ defmodule Homework.TransactionsTest do
       assert Transactions.list_transactions(%{_skip: 0, _limit: 10}) == [transaction]
     end
 
+    test "list_transactions/1 is able to skip pages", %{valid_attrs: valid_attrs} do
+      transaction = transaction_fixture(valid_attrs)
+      assert Transactions.list_transactions(%{_skip: 1, _limit: 10}) == []
+    end
+
+    test "transactions_info/1 returns the number of all transactions", %{valid_attrs: valid_attrs} do
+      assert Transactions.transactions_info(0) == %{count: 0}
+    end
+
     test "get_transaction!/1 returns the transaction with given id", %{valid_attrs: valid_attrs} do
       transaction = transaction_fixture(valid_attrs)
       assert Transactions.get_transaction!(transaction.id) == transaction
@@ -105,7 +114,7 @@ defmodule Homework.TransactionsTest do
       assert transaction.user_id == user1.id
     end
 
-    test "create_transaction/1 with invalid data returns error changeset", %{
+    test "add_transaction/1 with invalid data returns error changeset", %{
       invalid_attrs: invalid_attrs
     } do
       assert {:error, %Ecto.Changeset{}} = Transactions.add_transaction(invalid_attrs)
