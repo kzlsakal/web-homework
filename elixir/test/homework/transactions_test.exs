@@ -1,15 +1,18 @@
 defmodule Homework.TransactionsTest do
   use Homework.DataCase
 
-  alias Ecto.UUID
   alias Homework.Merchants
   alias Homework.Transactions
   alias Homework.Users
+  alias Homework.Companies
 
   describe "transactions" do
     alias Homework.Transactions.Transaction
 
     setup do
+      {:ok, company1} =
+        Companies.create_company(%{credit_line: 1_000_000, name: "some company name"})
+
       {:ok, merchant1} =
         Merchants.create_merchant(%{description: "some description", name: "some name"})
 
@@ -23,14 +26,16 @@ defmodule Homework.TransactionsTest do
         Users.create_user(%{
           dob: "some dob",
           first_name: "some first_name",
-          last_name: "some last_name"
+          last_name: "some last_name",
+          company_id: company1.id
         })
 
       {:ok, user2} =
         Users.create_user(%{
           dob: "some updated dob",
           first_name: "some updated first_name",
-          last_name: "some updated last_name"
+          last_name: "some updated last_name",
+          company_id: company1.id
         })
 
       valid_attrs = %{
@@ -67,6 +72,7 @@ defmodule Homework.TransactionsTest do
          invalid_attrs: invalid_attrs,
          merchant1: merchant1,
          merchant2: merchant2,
+         company1: company1,
          user1: user1,
          user2: user2
        }}
@@ -87,12 +93,12 @@ defmodule Homework.TransactionsTest do
     end
 
     test "list_transactions/1 is able to skip pages", %{valid_attrs: valid_attrs} do
-      transaction = transaction_fixture(valid_attrs)
+      transaction_fixture(valid_attrs)
       assert Transactions.list_transactions(%{_skip: 1, _limit: 10}) == []
     end
 
-    test "transactions_info/0 returns the number of all transactions", %{valid_attrs: valid_attrs} do
-      assert Transactions.transactions_info(0) == %{count: 0}
+    test "transactions_info/0 returns the number of all transactions" do
+      assert Transactions.transactions_info() == %{count: 0}
     end
 
     test "get_transaction!/0 returns the transaction with given id", %{valid_attrs: valid_attrs} do
