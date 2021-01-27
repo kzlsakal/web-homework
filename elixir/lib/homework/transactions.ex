@@ -28,6 +28,7 @@ defmodule Homework.Transactions do
     |> Repo.all()
   end
 
+  @spec transactions_info :: %{count: :integer}
   @doc """
   Returns the information about all transactions
 
@@ -37,7 +38,7 @@ defmodule Homework.Transactions do
       %transaction_info{}
 
   """
-  def transactions_info(_args) do
+  def transactions_info() do
     %{:count => Repo.one(from(t in "transactions", select: fragment("count(*)")))}
   end
 

@@ -91,11 +91,11 @@ defmodule Homework.TransactionsTest do
       assert Transactions.list_transactions(%{_skip: 1, _limit: 10}) == []
     end
 
-    test "transactions_info/1 returns the number of all transactions", %{valid_attrs: valid_attrs} do
+    test "transactions_info/0 returns the number of all transactions", %{valid_attrs: valid_attrs} do
       assert Transactions.transactions_info(0) == %{count: 0}
     end
 
-    test "get_transaction!/1 returns the transaction with given id", %{valid_attrs: valid_attrs} do
+    test "get_transaction!/0 returns the transaction with given id", %{valid_attrs: valid_attrs} do
       transaction = transaction_fixture(valid_attrs)
       assert Transactions.get_transaction!(transaction.id) == transaction
     end

@@ -10,11 +10,12 @@ defmodule HomeworkWeb.Resolvers.TransactionsResolver do
     {:ok, Transactions.list_transactions(args)}
   end
 
+  @spec transactions_info(any, any, any) :: {:ok, %{count: :integer}}
   @doc """
   Get information about all transactions
   """
-  def transactions_info(_root, args, _info) do
-    {:ok, Transactions.transactions_info(args)}
+  def transactions_info(_root, _args, _info) do
+    {:ok, Transactions.transactions_info()}
   end
 
   @doc """
