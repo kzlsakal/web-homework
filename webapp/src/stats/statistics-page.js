@@ -5,7 +5,7 @@ import GetTransactions from '../gql/transactions.gql'
 
 export function Statistics () {
   const { loading, error, data = {} } = useQuery(GetTransactions, {
-    variables: { skip: 0, limit: 0 }
+    variables: { skip: 0, limit: 10000 }
   })
 
   if (loading) {
