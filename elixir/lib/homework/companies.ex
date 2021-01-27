@@ -50,7 +50,7 @@ defmodule Homework.Companies do
 
     %{credit_line: credit_line} = company
 
-    Map.put(company, :available_credit, credit_line - spent_amount)
+    Map.put(company, :available_credit, credit_line - (spent_amount || 0))
   end
 
   @doc """
