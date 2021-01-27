@@ -39,6 +39,7 @@ defmodule Homework.MixProject do
       {:ecto_sql, "~> 3.4"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
+      {:faker, "~> 0.16"},
       {:phoenix, "~> 1.5.4"},
       {:phoenix_ecto, "~> 4.1"},
       {:phoenix_live_dashboard, "~> 0.2"},
@@ -46,7 +47,8 @@ defmodule Homework.MixProject do
       {:poison, "~> 2.1.0"},
       {:postgrex, ">= 0.0.0"},
       {:telemetry_metrics, "~> 0.4"},
-      {:telemetry_poller, "~> 0.4"}
+      {:telemetry_poller, "~> 0.4"},
+      {:uuid, "~> 1.1"}
     ]
   end
 
